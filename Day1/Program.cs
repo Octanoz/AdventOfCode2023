@@ -14,29 +14,10 @@ int PartOne(ReadOnlySpan<string> input)
     int result = 0;
     foreach (var line in input)
     {
-        int lineResult = 0;
+        int firstDigit = line.First(Char.IsDigit) - '0';
+        int lastDigit = line.Last(Char.IsDigit) - '0';
 
-        for (int i = 0; i < line.Length; i++)
-        {
-            if (Char.IsDigit(line[i]))
-            {
-                lineResult += line[i] - '0';
-                break;
-            }
-        }
-
-        lineResult *= 10;
-
-        for (int i = line.Length - 1; i >= 0; i--)
-        {
-            if (Char.IsDigit(line[i]))
-            {
-                lineResult += line[i] - '0';
-                break;
-            }
-        }
-
-        result += lineResult;
+        result += firstDigit * 10 + lastDigit;
     }
 
     return result;
@@ -44,71 +25,51 @@ int PartOne(ReadOnlySpan<string> input)
 
 int PartTwo(ReadOnlySpan<string> input)
 {
-    string[] numbers = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+    Dictionary<string, int> digits = new()
+    {
+        ["one"] = 1,
+        ["two"] = 2,
+        ["three"] = 3,
+        ["four"] = 4,
+        ["five"] = 5,
+        ["six"] = 6,
+        ["seven"] = 7,
+        ["eight"] = 8,
+        ["nine"] = 9
+    };
+
+    for (int i = 1; i < 10; i++)
+    {
+        digits.Add(i.ToString(), i);
+    }
+
     int result = 0;
     foreach (var line in input)
     {
-        int lineResult = 0;
-        bool hasWrittenNumbers = false;
-        int firstString = -1;
-        int lastString = -1;
+        int minIndex = line.Length;
+        int maxIndex = -1;
+        int firstDigit = 0;
+        int lastDigit = 0;
 
-        if (numbers.Any(line.Contains))
+        foreach (var kvp in digits)
         {
-            hasWrittenNumbers = true;
-            firstString = numbers.Select(n => new { Number = Array.IndexOf(numbers, n), Index = line.IndexOf(n) })
-                                    .Where(n => n.Index >= 0)
-                                    .OrderBy(n => n.Index)
-                                    .Select(n => n.Number)
-                                    .First();
+            int firstIndex = line.IndexOf(kvp.Key);
+            int lastIndex = line.LastIndexOf(kvp.Key);
 
-            lastString = numbers.Select(n => new { Number = Array.IndexOf(numbers, n), Index = line.LastIndexOf(n) })
-                                .Where(n => n.Index >= 0)
-                                .OrderBy(n => n.Index)
-                                .Select(n => n.Number)
-                                .Last();
-        }
-
-        for (int i = 0; i < line.Length; i++)
-        {
-            if (Char.IsDigit(line[i]))
+            if (firstIndex >= 0 && firstIndex < minIndex)
             {
-                if (hasWrittenNumbers && line[0..i].Contains(numbers[firstString]))
-                {
-                    lineResult += firstString;
-                }
-                else lineResult += line[i] - '0';
+                minIndex = firstIndex;
+                firstDigit = kvp.Value;
+            }
 
-                break;
+            if (lastIndex > maxIndex)
+            {
+                maxIndex = lastIndex;
+                lastDigit = kvp.Value;
             }
         }
 
-        if (lineResult == 0)
-        {
-            lineResult += firstString;
-            lineResult *= 10;
-            lineResult += lastString;
-        }
-        else
-        {
-            lineResult *= 10;
-
-            for (int i = line.Length - 1; i >= 0; i--)
-            {
-                if (Char.IsDigit(line[i]))
-                {
-                    if (hasWrittenNumbers && line[i..].Contains(numbers[lastString]))
-                    {
-                        lineResult += lastString;
-                    }
-                    else lineResult += line[i] - '0';
-
-                    break;
-                }
-            }
-        }
-
-        result += lineResult;
+        result += firstDigit * 10 + lastDigit;
     }
 
     return result;
