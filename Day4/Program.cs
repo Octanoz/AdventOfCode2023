@@ -14,8 +14,8 @@ int PartOne(ReadOnlySpan<string> input)
     foreach (var line in input)
     {
         string[] parts = line.Split([':', '|']);
-        int[] winners = parts[1].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
-        int[] givenNumbers = parts[2].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
+        var winners = parts[1].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse);
+        var givenNumbers = parts[2].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse);
 
         int[] winningNumbers = winners.Intersect(givenNumbers).ToArray();
 
@@ -33,8 +33,8 @@ int PartTwo(ReadOnlySpan<string> input)
     {
         totalCards[index]++;
         string[] parts = input[index].Split([':', '|']);
-        int[] winners = parts[1].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
-        int[] givenNumbers = parts[2].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
+        var winners = parts[1].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse);
+        var givenNumbers = parts[2].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse);
 
         int cardPoints = winners.Intersect(givenNumbers).Count();
         int copies = totalCards[index];
