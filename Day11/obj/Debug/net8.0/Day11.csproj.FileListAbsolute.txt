@@ -1,0 +1,14 @@
+C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day11\bin\Debug\net8.0\Day11.exe
+C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day11\bin\Debug\net8.0\Day11.deps.json
+C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day11\bin\Debug\net8.0\Day11.runtimeconfig.json
+C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day11\bin\Debug\net8.0\Day11.dll
+C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day11\bin\Debug\net8.0\Day11.pdb
+C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day11\obj\Debug\net8.0\Day11.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day11\obj\Debug\net8.0\Day11.AssemblyInfoInputs.cache
+C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day11\obj\Debug\net8.0\Day11.AssemblyInfo.cs
+C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day11\obj\Debug\net8.0\Day11.csproj.CoreCompileInputs.cache
+C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day11\obj\Debug\net8.0\Day11.dll
+C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day11\obj\Debug\net8.0\refint\Day11.dll
+C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day11\obj\Debug\net8.0\Day11.pdb
+C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day11\obj\Debug\net8.0\Day11.genruntimeconfig.cache
+C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day11\obj\Debug\net8.0\ref\Day11.dll
