@@ -12,3 +12,4 @@ C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day13\obj\Debug\net8.0\refin
 C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day13\obj\Debug\net8.0\Day13.pdb
 C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day13\obj\Debug\net8.0\Day13.genruntimeconfig.cache
 C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day13\obj\Debug\net8.0\ref\Day13.dll
+C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day13\obj\Debug\net8.0\Day13.sourcelink.json
