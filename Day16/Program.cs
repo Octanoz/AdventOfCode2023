@@ -7,8 +7,7 @@ char[][] input = File.ReadAllLines(filePath).Select(s => s.ToCharArray()).ToArra
 int rows = input.Length;
 int cols = input[0].Length;
 
-Dictionary<(int row, int col), char> mirrors = [];
-Dictionary<(int row, int col), char> splitters = [];
+Dictionary<(int row, int col), char> symbols = [];
 
 for (int i = 0; i < rows; i++)
 {
@@ -16,10 +15,8 @@ for (int i = 0; i < rows; i++)
     {
         char c = input[i][j];
 
-        if (c is '|' or '-')
-            splitters.Add((i, j), c);
-        else if (c is '/' or '\\')
-            mirrors.Add((i, j), c);
+        if (c is '|' or '-' or '/' or '\\')
+            symbols.Add((i, j), c);
     }
 }
 
@@ -59,6 +56,8 @@ int PartOne(char[][] grid, int rows, int cols)
                 List<Point> nextPoints = BeamSplits(c, current);
                 nextPoints.ForEach(beams.Enqueue);
                 break;
+            default:
+                throw new ArgumentException($"Unexpected character {c} used in call to the general switch statement.");
         }
     }
 
@@ -114,6 +113,8 @@ int PartTwo(char[][] grid, int rows, int cols)
                     List<Point> nextPoints = BeamSplits(c, current);
                     nextPoints.ForEach(beams.Enqueue);
                     break;
+                default:
+                    throw new ArgumentException($"Unexpected character {c} used in call to the general switch statement.");
             }
         }
 
@@ -154,11 +155,7 @@ void ResetGrid(char[][] grid, int rows, int cols)
     {
         for (int j = 0; j < cols; j++)
         {
-            if (mirrors.TryGetValue((i, j), out char symbol))
-            {
-                grid[i][j] = symbol;
-            }
-            else if (splitters.TryGetValue((i, j), out symbol))
+            if (symbols.TryGetValue((i, j), out char symbol))
             {
                 grid[i][j] = symbol;
             }
@@ -167,8 +164,8 @@ void ResetGrid(char[][] grid, int rows, int cols)
     }
 }
 
-bool PointIsValid(Point current, int rows, int cols) => current.Row >= 0 && current.Row < rows
-                                                    && current.Column >= 0 && current.Column < cols;
+bool PointIsValid(Point current, int rows, int cols) => current.Row >= 0 && current.Row < rows &&
+                                                        current.Column >= 0 && current.Column < cols;
 
 Point Move(Point current)
 {
@@ -188,20 +185,26 @@ List<Point> BeamSplits(char c, Point current)
     {
         '|' => current.Direction switch
         {
-            Direction.Left => [new(current.Row - 1, current.Column,  (Direction)((int)(current.Direction + 1) % 4)),
-                                    new(current.Row + 1, current.Column, (Direction)((int)(current.Direction - 1 + 4) % 4))],
-            Direction.Right => [new(current.Row - 1, current.Column, (Direction)((int)(current.Direction - 1 + 4) % 4)),
-                                    new(current.Row + 1, current.Column, (Direction)((int)(current.Direction + 1) % 4))],
+            Direction.Left => [new(current.Row - 1, current.Column,  (Direction)(((int)current.Direction + 1) % 4)),
+                                new(current.Row + 1, current.Column, (Direction)(((int)current.Direction - 1 + 4) % 4))],
+
+            Direction.Right => [new(current.Row - 1, current.Column, (Direction)(((int)current.Direction - 1 + 4) % 4)),
+                                new(current.Row + 1, current.Column, (Direction)(((int)current.Direction + 1) % 4))],
+
             _ => throw new ArgumentException($"Invalid direction found: [{current.Direction}] Point: [{current.Row},{current.Column}]")
         },
+
         '-' => current.Direction switch
         {
-            Direction.Up => [new(current.Row, current.Column + 1, (Direction)((int)(current.Direction + 1) % 4)),
-                                    new(current.Row, current.Column - 1, (Direction)((int)(current.Direction - 1 + 4) % 4))],
-            Direction.Down => [new(current.Row, current.Column + 1, (Direction)((int)(current.Direction - 1 + 4) % 4)),
-                                    new(current.Row, current.Column - 1, (Direction)((int)(current.Direction + 1) % 4))],
+            Direction.Up => [new(current.Row, current.Column + 1, (Direction)(((int)current.Direction + 1) % 4)),
+                            new(current.Row, current.Column - 1, (Direction)(((int)current.Direction - 1 + 4) % 4))],
+
+            Direction.Down => [new(current.Row, current.Column + 1, (Direction)(((int)current.Direction - 1 + 4) % 4)),
+                                new(current.Row, current.Column - 1, (Direction)(((int)current.Direction + 1) % 4))],
+
             _ => throw new ArgumentException($"Invalid direction found: [{current.Direction}] Point: [{current.Row},{current.Column}]")
         },
+
         _ => throw new ArgumentException($"Non-splitter character [{c}] used in call to BeamSplits method")
     };
 }
@@ -212,20 +215,22 @@ Point MirrorReflect(char c, Point current)
     {
         '/' => current.Direction switch
         {
-            Direction.Left => new(current.Row + 1, current.Column, (Direction)((int)(current.Direction - 1 + 4) % 4)),
-            Direction.Right => new(current.Row - 1, current.Column, (Direction)((int)(current.Direction - 1 + 4) % 4)),
-            Direction.Up => new(current.Row, current.Column + 1, (Direction)((int)(current.Direction + 1) % 4)),
-            Direction.Down => new(current.Row, current.Column - 1, (Direction)(int)(current.Direction + 1 % 4)),
+            Direction.Left => new(current.Row + 1, current.Column, (Direction)(((int)current.Direction - 1 + 4) % 4)),
+            Direction.Right => new(current.Row - 1, current.Column, (Direction)(((int)current.Direction - 1 + 4) % 4)),
+            Direction.Up => new(current.Row, current.Column + 1, (Direction)(((int)current.Direction + 1) % 4)),
+            Direction.Down => new(current.Row, current.Column - 1, (Direction)(((int)current.Direction + 1) % 4)),
             _ => throw new ArgumentException($"Invalid direction found: [{current.Direction}] Point: [{current.Row},{current.Column}]")
         },
+
         '\\' => current.Direction switch
         {
-            Direction.Left => new(current.Row - 1, current.Column, (Direction)((int)(current.Direction + 1) % 4)),
-            Direction.Right => new(current.Row + 1, current.Column, (Direction)((int)(current.Direction + 1) % 4)),
-            Direction.Up => new(current.Row, current.Column - 1, (Direction)((int)(current.Direction - 1 + 4) % 4)),
-            Direction.Down => new(current.Row, current.Column + 1, (Direction)((int)(current.Direction - 1 + 4) % 4)),
+            Direction.Left => new(current.Row - 1, current.Column, (Direction)(((int)current.Direction + 1) % 4)),
+            Direction.Right => new(current.Row + 1, current.Column, (Direction)(((int)current.Direction + 1) % 4)),
+            Direction.Up => new(current.Row, current.Column - 1, (Direction)(((int)current.Direction - 1 + 4) % 4)),
+            Direction.Down => new(current.Row, current.Column + 1, (Direction)(((int)current.Direction - 1 + 4) % 4)),
             _ => throw new ArgumentException($"Invalid direction found: [{current.Direction}] Point: [{current.Row},{current.Column}]")
         },
-        _ => throw new ArgumentException($"Non-mirror character [{c}] used in MirrorReflect method")
+
+        _ => throw new ArgumentException($"Non-mirror character [{c}] used in call to MirrorReflect method")
     };
 }

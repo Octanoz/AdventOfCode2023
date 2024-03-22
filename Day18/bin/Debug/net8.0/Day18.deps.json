@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "Day18/1.0.0": {
+        "dependencies": {
+          "AdventUtilities": "1.0.0"
+        },
+        "runtime": {
+          "Day18.dll": {}
+        }
+      },
+      "AdventUtilities/1.0.0": {
+        "runtime": {
+          "AdventUtilities.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Day18/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AdventUtilities/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
