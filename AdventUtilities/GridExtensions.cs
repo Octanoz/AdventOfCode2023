@@ -145,4 +145,49 @@ public static class GridExtensions
         }
     }
 
+    public static void Draw2DGridTight<T>(T[,] grid)
+    {
+        int rows = grid.GetLength(0);
+        int cols = grid.GetLength(1);
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                Console.Write($"{grid[i, j]}");
+            }
+            Console.WriteLine();
+        }
+    }
+
+    public static void DrawJaggedGrid<T>(T[][] grid)
+    {
+        int rows = grid.Length;
+        int cols = grid[0].Length;
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                Console.Write($"{grid[i][j]} ");
+            }
+            Console.WriteLine();
+        }
+    }
+
+    public static void DrawJaggedGridTight<T>(T[][] grid)
+    {
+        int rows = grid.Length;
+        int cols = grid[0].Length;
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                Console.Write($"{grid[i][j]}");
+            }
+            Console.WriteLine();
+        }
+    }
+
 }
