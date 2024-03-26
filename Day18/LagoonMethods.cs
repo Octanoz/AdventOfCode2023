@@ -46,7 +46,6 @@ public static class LagoonMethods
 
     public static bool IsValidCoordinate(Coord coord, int rows, int cols) => coord.Row >= 0 && coord.Row < rows && coord.Col >= 0 && coord.Col < cols;
 
-
     public static int CalculateVolumeFilled(char[,] grid)
     {
         int rows = grid.GetLength(0);
@@ -158,31 +157,28 @@ public static class LagoonMethods
                 newBaseCoord = new(endCoord.Row, endCoord.Col);
                 break;
             default:
-                throw new ArgumentException($"Invalid direction used in GetEndCoord [{direction}]");
+                throw new ArgumentException($"Invalid direction used in CalculateRange [{direction}]");
         }
 
         if (startCoord.Row < endCoord.Row || startCoord.Col < endCoord.Col)
             return (startCoord, endCoord);
         else return (endCoord, startCoord);
-
     }
 
-    public static ulong CalculateVolume2(List<(CoordUL, CoordUL)> inputHorizontalCoordinates, List<(CoordUL, CoordUL)> verticalRanges)
+    public static long CalculateVolume2(List<(CoordL, CoordL)> inputHorizontalCoordinates, List<(CoordL, CoordL)> verticalRanges)
     {
         // Sort coordinates by row to ensure we are scanning row by row
-        List<(CoordUL, CoordUL)> horizontalRanges = inputHorizontalCoordinates.OrderBy(c => c.Item1.Row).ToList();
-        ulong rows = horizontalRanges.Max(c => Math.Max(c.Item1.Row, c.Item2.Row)) + 1;
+        List<(CoordL, CoordL)> horizontalRanges = inputHorizontalCoordinates.OrderBy(c => c.Item1.Row).ToList();
+        long rows = horizontalRanges.Max(c => Math.Max(c.Item1.Row, c.Item2.Row)) + 1;
 
-        ulong volume = 0;
-        var (firstNeighbour, lastNeighbour) = (0, 0);
+        var (insideLagoon, firstNeighbourUp, lastNeighbourUp) = (false, false, false);
+        CoordL? prevCoord = null;
+        long volume = 0;
 
-        bool insideLagoon = false;
-        CoordUL? prevCoord = null;
-
-        for (ulong i = 0; i < rows; i++)
+        for (long i = 0; i < rows; i++)
         {
             //Limit ranges to current row to reduce calculations further down the method
-            List<(CoordUL, CoordUL)> currentRowRanges = CalculateRowRanges(horizontalRanges, verticalRanges, i);
+            List<(CoordL, CoordL)> currentRowRanges = CalculateRowRanges(horizontalRanges, verticalRanges, i);
 
             insideLagoon = false;
             prevCoord = null;
@@ -210,13 +206,15 @@ public static class LagoonMethods
                 {
                     volume += end.Col - start.Col + 1;
 
-                    firstNeighbour = verticalRanges.Exists(c => c.Item1 == start.Up || c.Item2 == start.Up) ? -1 : 1;
-                    lastNeighbour = verticalRanges.Exists(c => c.Item1 == end.Up || c.Item2 == end.Up) ? -1 : 1;
+                    firstNeighbourUp = verticalRanges.Exists(c => c.Item1 == start.Up || c.Item2 == start.Up);
+                    lastNeighbourUp = verticalRanges.Exists(c => c.Item1 == end.Up || c.Item2 == end.Up);
 
-                    if (firstNeighbour != lastNeighbour)
+                    //Flip state if orientation of first neighbour is different from orientation of last neighbour
+                    if (firstNeighbourUp != lastNeighbourUp)
                         insideLagoon = !insideLagoon;
 
-                    (firstNeighbour, lastNeighbour) = (0, 0);
+                    //Reset bools
+                    (firstNeighbourUp, lastNeighbourUp) = (false, false);
                 }
                 else
                 {
@@ -232,9 +230,9 @@ public static class LagoonMethods
         return volume;
     }
 
-    private static List<(CoordUL, CoordUL)> CalculateRowRanges(List<(CoordUL, CoordUL)> horizontalRanges, List<(CoordUL start, CoordUL end)> verticalRanges, ulong row)
+    private static List<(CoordL, CoordL)> CalculateRowRanges(List<(CoordL, CoordL)> horizontalRanges, List<(CoordL start, CoordL end)> verticalRanges, long row)
     {
-        List<(CoordUL, CoordUL)> result = horizontalRanges.Where(range => range.Item1.Row == row).ToList();
+        List<(CoordL, CoordL)> result = horizontalRanges.Where(range => range.Item1.Row == row).ToList();
 
         foreach (var (start, end) in verticalRanges)
         {
@@ -247,10 +245,10 @@ public static class LagoonMethods
         return result.OrderBy(c => c.Item2.Col).ToList();
     }
 
-    public static List<(CoordUL, CoordUL)> CorrectCoordinates(List<(CoordL, CoordL)> rawRanges, CoordL correctiveCoord)
+    public static List<(CoordL, CoordL)> CorrectCoordinates(List<(CoordL, CoordL)> rawRanges, CoordL correctiveCoord)
     {
-        return rawRanges.Select(c => (new CoordUL((ulong)(c.Item1.Row + correctiveCoord.Row), (ulong)(c.Item1.Col + correctiveCoord.Col)),
-                                                                new CoordUL((ulong)(c.Item2.Row + correctiveCoord.Row), (ulong)(c.Item2.Col + correctiveCoord.Col))))
+        return rawRanges.Select(c => (new CoordL(c.Item1.Row + correctiveCoord.Row, c.Item1.Col + correctiveCoord.Col),
+                                    new CoordL(c.Item2.Row + correctiveCoord.Row, c.Item2.Col + correctiveCoord.Col)))
                         .ToList();
     }
 

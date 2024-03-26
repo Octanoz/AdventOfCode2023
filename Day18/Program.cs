@@ -104,7 +104,7 @@ int PartOne(Span<string> input)
     return LagoonMethods.CalculateVolumeFilled(grid);
 }
 
-ulong PartTwo(Span<string> input)
+long PartTwo(Span<string> input)
 {
     //In part 2, create tuple ranges instead of separate coordinates
     List<(CoordL, CoordL)> horizontalRawRanges = [];
@@ -114,8 +114,7 @@ ulong PartTwo(Span<string> input)
     foreach (var line in input)
     {
         string[] parts = line.Split();
-        string hex = parts[2][2..^2];
-        long steps = Convert.ToInt32(hex, 16);
+        long steps = Convert.ToInt32(parts[2][2..^2], 16);
         int direction = parts[2][^2] - '0';
 
         (CoordL, CoordL) currentRange = LagoonMethods.CalculateRange(baseCoord, (Direction)direction, steps, out CoordL newBaseCoord);
@@ -138,8 +137,8 @@ ulong PartTwo(Span<string> input)
     }
     CoordL correctiveCoord = new(Math.Max(0, -lowestRow), Math.Max(0, -lowestCol));
 
-    List<(CoordUL, CoordUL)> horizontalRanges = LagoonMethods.CorrectCoordinates(horizontalRawRanges, correctiveCoord);
-    List<(CoordUL, CoordUL)> verticalRanges = LagoonMethods.CorrectCoordinates(verticalRawRanges, correctiveCoord);
+    List<(CoordL, CoordL)> horizontalRanges = LagoonMethods.CorrectCoordinates(horizontalRawRanges, correctiveCoord);
+    List<(CoordL, CoordL)> verticalRanges = LagoonMethods.CorrectCoordinates(verticalRawRanges, correctiveCoord);
 
     return LagoonMethods.CalculateVolume2(horizontalRanges, verticalRanges);
 }
