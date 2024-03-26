@@ -1,8 +1,7 @@
 ﻿// #define TEST
-// #define PART1
+#define PART1
 #define PART2
 
-using AdventUtilities;
 using CoordXL;
 using CustomCoord;
 using Lagoon;
