@@ -49,7 +49,7 @@ In this module configuration:
 - The broadcaster has three destination modules named `a`, `b`, and `c`.
 - Each of these modules is a flip-flop module (as indicated by the `%` prefix). 
     - `a` outputs to `b` which outputs to `c` which outputs to another module named `inv`. 
-    - `inv` is a conjunction module (as indicated by the `&` prefix)
+- `inv` is a conjunction module (as indicated by the `&` prefix)
         - Because `inv` has only one input, acts like an inverter (it sends the opposite of the pulse type it receives); it outputs to `a`.
 
 <br>
