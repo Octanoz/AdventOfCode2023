@@ -2,6 +2,8 @@ using Gearspace;
 
 namespace Workflows;
 
+#region Part 1 Class Definitions
+
 public class Workflow(string Name, string DefaultRule)
 {
     public string Name { get; } = Name;
@@ -44,57 +46,6 @@ public class Workflow(string Name, string DefaultRule)
     }
 }
 
-public class WorkflowBlueprint(string Name, string DefaultRule, string[] Rules)
-{
-    public string Name { get; } = Name;
-    public string DefaultRule { get; } = DefaultRule;
-    public string[] Rules { get; set; } = Rules;
-
-    public static void GenerateChildren(WorkflowNode currentNode, WorkflowBlueprint currentBlueprint)
-    {
-        string[] comparisons = currentBlueprint.Rules;
-        for (int i = 0; i < comparisons.Length; i++)
-        {
-            //{a<2000:kdq}
-            char gearAttribute = comparisons[i][0]; //a
-            string[] valueAndDestination = comparisons[i][2..].Split(':'); //2000 kdq
-            int comparisonValue = int.Parse(valueAndDestination[0]); //2000
-            string destination = valueAndDestination[1]; //kdq
-
-            //Assign workflow rules, depending on how many were present in the comparisons array
-            if (currentNode.AvailableRanges.TryGetValue(gearAttribute, out List<int>? storedRange))
-            {
-                if (comparisons[i][1] is '<')
-                {
-                    List<int> childRanges = storedRange.Where(x => x < comparisonValue).ToList();
-                    WorkflowNode childNode = GenerateChildNode(currentNode, gearAttribute, destination, childRanges);
-
-                    currentNode.Children.Add(childNode);
-                    currentNode.AvailableRanges[gearAttribute] = currentNode.AvailableRanges[gearAttribute].Where(c => !childRanges.Contains(c)).ToList();
-                }
-                else
-                {
-                    List<int> childRanges = [.. storedRange.Where(x => x > comparisonValue)];
-                    WorkflowNode childNode = GenerateChildNode(currentNode, gearAttribute, destination, childRanges);
-
-                    currentNode.Children.Add(childNode);
-                    currentNode.AvailableRanges[gearAttribute] = currentNode.AvailableRanges[gearAttribute].Where(c => !childRanges.Contains(c)).ToList();
-                }
-            }
-        }
-
-        WorkflowNode defaultChild = new(currentBlueprint.DefaultRule, currentNode.AvailableRanges);
-        currentNode.Children.Add(defaultChild);
-    }
-
-    private static WorkflowNode GenerateChildNode(WorkflowNode currentNode, char gearAttribute, string destination, List<int> childRanges)
-    {
-        WorkflowNode childNode = new(destination, currentNode.AvailableRanges);
-        childNode.AvailableRanges[gearAttribute] = childRanges; //a: 0-1999
-        return childNode;
-    }
-}
-
 public static class WorkflowExtensions
 {
     public static void AddRule(this Workflow currentWorkflow, Func<Gear, bool> comparisonFunction, string destination)
@@ -103,7 +54,7 @@ public static class WorkflowExtensions
         {
             currentWorkflow.Rules.Add(gear => comparisonFunction(gear) ? destination : "");
         }
-        else throw new InvalidOperationException($"Workflow {currentWorkflow.Name} already has 3 rules but AddRule is prompted a fourth time.");
+        else throw new InvalidOperationException($"Workflow {currentWorkflow.Name} already has 3 rules but AddRule is called a fourth time.");
     }
 
     public static string ProcessGear(this Workflow activeWorkflow, Gear gear)
@@ -120,16 +71,65 @@ public static class WorkflowExtensions
     }
 }
 
+#endregion
+
+public class WorkflowBlueprint(string Name, string DefaultRule, string[] Rules)
+{
+    public string Name { get; } = Name;
+    public string DefaultRule { get; } = DefaultRule;
+    public string[] Rules { get; set; } = Rules;
+}
+
 public class WorkflowNode(string WorkflowName, Dictionary<char, List<int>> AvailableRanges)
 {
     public string WorkflowName { get; } = WorkflowName;
-    public Dictionary<char, List<int>> AvailableRanges { get; } = AvailableRanges ?? new()
-    {
-        ['x'] = Enumerable.Range(0, 4000).ToList(),
-        ['m'] = Enumerable.Range(0, 4000).ToList(),
-        ['a'] = Enumerable.Range(0, 4000).ToList(),
-        ['s'] = Enumerable.Range(0, 4000).ToList()
-    };
+    public Dictionary<char, List<int>> AvailableRanges { get; } = new(AvailableRanges);
     public List<WorkflowNode> Children { get; set; } = [];
+
+    public static void GenerateChildren(WorkflowNode currentNode, WorkflowBlueprint currentBlueprint)
+    {
+        string[] comparisons = currentBlueprint.Rules;
+        for (int i = 0; i < comparisons.Length; i++)
+        {
+            //{a<2000:kdq}
+            char gearAttribute = comparisons[i][0]; //a
+            string[] valueAndDestination = comparisons[i][2..].Split(':'); //2000 kdq
+            int comparisonValue = int.Parse(valueAndDestination[0]); //2000
+            string destination = valueAndDestination[1]; //kdq
+
+            //Assign workflow rules, depending on how many were present in the comparisons array
+            if (currentNode.AvailableRanges.TryGetValue(gearAttribute, out List<int>? storedRange))
+            {
+                if (comparisons[i][1] is '<' && storedRange.Exists(x => x < comparisonValue))
+                {
+                    List<int> childRanges = storedRange.Where(x => x < comparisonValue).ToList();
+                    WorkflowNode childNode = GenerateChildNode(currentNode, gearAttribute, destination, childRanges);
+
+                    currentNode.Children.Add(childNode);
+                    currentNode.AvailableRanges[gearAttribute] = currentNode.AvailableRanges[gearAttribute].SkipWhile(c => childRanges.Contains(c)).ToList();
+                }
+                else if (comparisons[i][1] is '>' && storedRange.Exists(x => x > comparisonValue))
+                {
+                    List<int> childRanges = storedRange.Where(x => x > comparisonValue).ToList();
+                    WorkflowNode childNode = GenerateChildNode(currentNode, gearAttribute, destination, childRanges);
+
+                    currentNode.Children.Add(childNode);
+                    currentNode.AvailableRanges[gearAttribute] = currentNode.AvailableRanges[gearAttribute].TakeWhile(c => !childRanges.Contains(c)).ToList();
+                }
+            }
+        }
+
+        WorkflowNode defaultChild = new(currentBlueprint.DefaultRule, currentNode.AvailableRanges);
+        currentNode.Children.Add(defaultChild);
+    }
+
+    private static WorkflowNode GenerateChildNode(WorkflowNode currentNode, char gearAttribute, string destination, List<int> childRanges)
+    {
+        WorkflowNode childNode = new(destination, currentNode.AvailableRanges);
+        childNode.AvailableRanges[gearAttribute] = childRanges; //a: 0-1999
+        return childNode;
+    }
+
+    public override string ToString() => Children.Count is 0 ? $"{WorkflowName}" : $"{WorkflowName} ->[ {String.Join(" | ", Children)} ]";
 
 }

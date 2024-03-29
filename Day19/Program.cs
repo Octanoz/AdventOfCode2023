@@ -12,19 +12,19 @@ Dictionary<string, string> filePaths = new()
 };
 
 #if PART1
-Console.WriteLine($"Grand total of all gear ratings in part one is {PartOne(filePaths)}");
+Console.WriteLine($"Grand total of all gear ratings in part one is {PartOne(filePaths["challenge"])}");
 #endif
 
 #if PART2
-Console.WriteLine($"Grand total of all gear ratings in part two is {PartTwo(filePaths)}");
+Console.WriteLine($"Grand total of all gear ratings in part two is {PartTwo(filePaths["challenge"])}");
 #endif
 
-int PartOne(Dictionary<string, string> filePaths)
+int PartOne(string filePath)
 {
     Dictionary<string, Workflow> storedWorkflows = [];
     List<Gear> acceptedGears = [];
 
-    using StreamReader sr = new(filePaths["challenge"]);
+    using StreamReader sr = new(filePath);
     string currentString = sr.ReadLine() ?? throw new InvalidDataException("Unable to read the input file.");
 
     while (!String.IsNullOrEmpty(currentString))
@@ -48,9 +48,9 @@ int PartOne(Dictionary<string, string> filePaths)
 
         //Gear line format: {x=787,m=2655,a=1222,s=2876}
         int[] gearAttributes = currentString[2..^1].Split(new[] { '=', ',' }, StringSplitOptions.RemoveEmptyEntries)
-                                                                .Where(s => Char.IsDigit(s[0]))
-                                                                .Select(Int32.Parse)
-                                                                .ToArray();
+                                                    .Where(s => Char.IsDigit(s[0]))
+                                                    .Select(Int32.Parse)
+                                                    .ToArray();
 
         Gear currentGear = new(gearAttributes[0], gearAttributes[1], gearAttributes[2], gearAttributes[3]);
 
@@ -70,12 +70,13 @@ int PartOne(Dictionary<string, string> filePaths)
     return acceptedGears.Select(g => g).Aggregate(0, (acc, g) => acc + g.x + g.m + g.a + g.s);
 }
 
-long PartTwo(Dictionary<string, string> filePaths)
+long PartTwo(string filePath)
 {
     Dictionary<string, WorkflowBlueprint> workflowBlueprints = [];
-    List<long> acceptedRatings = [];
 
-    using StreamReader sr = new(filePaths["challenge"]);
+    long result = 0;
+
+    using StreamReader sr = new(filePath);
     string currentString = sr.ReadLine() ?? throw new InvalidDataException("Unable to read the input file.");
 
     while (!String.IsNullOrEmpty(currentString))
@@ -92,7 +93,15 @@ long PartTwo(Dictionary<string, string> filePaths)
     }
 
     Queue<WorkflowNode> workflowQueue = [];
-    workflowQueue.Enqueue(new("in", null!));
+    Dictionary<char, List<int>> defaultRanges = new()
+    {
+        ['x'] = Enumerable.Range(1, 4000).ToList(),
+        ['m'] = Enumerable.Range(1, 4000).ToList(),
+        ['a'] = Enumerable.Range(1, 4000).ToList(),
+        ['s'] = Enumerable.Range(1, 4000).ToList(),
+    };
+
+    workflowQueue.Enqueue(new("in", defaultRanges));
     while (workflowQueue.Count is not 0)
     {
         WorkflowNode currentNode = workflowQueue.Dequeue();
@@ -102,20 +111,21 @@ long PartTwo(Dictionary<string, string> filePaths)
 
         if (currentNode.WorkflowName is "A")
         {
-            acceptedRatings.Add(currentNode.AvailableRanges['x'].Count * currentNode.AvailableRanges['m'].Count *
-                                        currentNode.AvailableRanges['a'].Count * currentNode.AvailableRanges['s'].Count);
+            int validX = currentNode.AvailableRanges['x'].Count;
+            int validM = currentNode.AvailableRanges['m'].Count;
+            int validA = currentNode.AvailableRanges['a'].Count;
+            int validS = currentNode.AvailableRanges['s'].Count;
+
+            result += (long)validX * validM * validA * validS;
 
             continue;
         }
 
         WorkflowBlueprint currentBlueprint = workflowBlueprints[currentNode.WorkflowName];
-        WorkflowBlueprint.GenerateChildren(currentNode, currentBlueprint);
+        WorkflowNode.GenerateChildren(currentNode, currentBlueprint);
 
-        foreach (var childNode in currentNode.Children)
-        {
-            workflowQueue.Enqueue(childNode);
-        }
+        currentNode.Children.ForEach(workflowQueue.Enqueue);
     }
 
-    return acceptedRatings.Sum();
+    return result;
 }
