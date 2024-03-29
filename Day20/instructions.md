@@ -29,9 +29,9 @@ Here at `Desert Machine Headquarters`, there is a module with a single button on
 
 When you push the button, a single `low` pulse is sent directly to the broadcaster module. After pushing the button, you must wait until all pulses have been delivered and fully handled before pushing it again. Never push the button if modules are still processing pulses.
 - Pulses are always processed in the order they are sent.
-    - If a pulse is sent to modules a, b, and c
-        - Module a processes its pulse and sends more pulses
-        - The pulses sent to modules b and c would have to be handled first.
+    - If a pulse is sent to modules `a`, `b`, and `c`
+        - Module `a` processes its pulse and sends more pulses
+        - The pulses sent to modules `b` and `c` would have to be handled first.
 
 The module configuration (your puzzle input) lists each module. The name of the module is preceded by a symbol identifying its type, if any. The name is then followed by an arrow and a list of its destination modules.
 
