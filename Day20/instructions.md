@@ -23,7 +23,8 @@ There are several different types of modules:
         - Then, if it remembers `high` pulses for all inputs, it sends a `low` pulse
         - Otherwise, it sends a `high` pulse.
 
-3. There is a single broadcast module (named `broadcaster`). When it receives a pulse, it sends the same pulse to all of its destination modules.
+3. There is a single broadcast module (named `broadcaster`). 
+    - Any received pulse is sent to all of its destination modules simultaneously.
 
 Here at `Desert Machine Headquarters`, there is a module with a single button on it called, aptly, the button module.  
 
@@ -84,7 +85,7 @@ broadcaster -> a
 &con -> output
 ```
 
-This module configuration includes the broadcaster, two flip-flops (named `a` and `b`), a single-input conjunction module (`inv`), a multi-input conjunction module (`con`), and an untyped module named output (for testing purposes). The multi-input conjunction module `con` watches the two flip-flop modules and, if they're both `on`, sends a `low` pulse to the output module.
+This module configuration includes the broadcaster, two flip-flops `a` and `b`, a single-input conjunction module `inv`, a multi-input conjunction module `con`, and an untyped module named output (for testing purposes). The multi-input conjunction module `con` watches the two flip-flop modules and, if they're both `on`, sends a `low` pulse to the output module.
 
 Here's what happens if you push the button once:
 
@@ -158,3 +159,11 @@ Multiplying these together gives `11687500`.
 Consult your module configuration; determine the number of `low` pulses and `high` pulses that would be sent after pushing the button `1000` times, waiting for all pulses to be fully handled after each push of the button.
 
 What do you get if you multiply the total number of `low` pulses sent by the total number of `high` pulses sent?
+
+<br>
+
+# Part Two
+
+The final machine responsible for moving the sand down to Island Island has a module attached named `rx`. The machine turns on when a single `low` pulse is sent to `rx`.
+
+Reset all modules to their default states. Waiting for all pulses to be fully handled after each button press, what is the fewest number of button presses required to deliver a single low pulse to the module named rx?
