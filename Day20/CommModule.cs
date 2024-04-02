@@ -41,7 +41,7 @@ public class Conjunction(string Name, string[] Destinations) : CommModule(Name, 
 
     public override string ToString()
     {
-        return $"C {Name} [ {String.Join(" | ", InputMemory.Select(kvp => $"{kvp.Key}: {kvp.Value}"))} ]";
+        return $"Con-{Name} [ {String.Join(" | ", InputMemory.Select(kvp => $"{kvp.Key}: {kvp.Value}"))} ]";
     }
 }
 

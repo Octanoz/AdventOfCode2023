@@ -90,7 +90,7 @@ int PartOne(string filePath)
 
     for (int i = 0; i < 1000; i++)
     {
-        modules.Enqueue((startingModule.Name, Pulse.Low, startingModule.Name));
+        modules.Enqueue(("button", Pulse.Low, startingModule.Name));
         lowPulseCount++;
 
         while (modules.Count is not 0)
@@ -216,12 +216,15 @@ long PartTwo(string filePath)
     CommModule? startingModule = commModules.First(cm => cm.Name is "broadcaster") ??
                                     throw new InvalidDataException($"Was not able to find the starting module named 'broadcaster'");
 
+#if TEST
     int highCount = 0;
+#endif
+
     long loop = 0;
     while (true)
     {
         loop++;
-        modules.Enqueue((startingModule.Name, Pulse.Low, startingModule.Name));
+        modules.Enqueue(("button", Pulse.Low, startingModule.Name));
         int lowPulseCount = 0;
         while (modules.Count is not 0)
         {
@@ -239,7 +242,7 @@ long PartTwo(string filePath)
                     {
                         highCount = gfHighCount;
                         Console.WriteLine(gfCon);
-                        Console.WriteLine($"More than one difference found in loop {loop}");
+                        Console.WriteLine($"More than one difference found in loop {loop}\n============\n");
                     }
 #endif
 
@@ -284,6 +287,9 @@ long PartTwo(string filePath)
                 }
             }
         }
+
+        if (loop % 1_000 is 0)
+            Debug.WriteLine($"Loop {loop,10} completed");
 
         if (lowPulseCount is 1)
             return loop;
