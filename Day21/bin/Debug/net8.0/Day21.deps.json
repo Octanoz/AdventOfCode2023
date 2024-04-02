@@ -7,14 +7,27 @@
   "targets": {
     ".NETCoreApp,Version=v8.0": {
       "Day21/1.0.0": {
+        "dependencies": {
+          "AdventUtilities": "1.0.0"
+        },
         "runtime": {
           "Day21.dll": {}
+        }
+      },
+      "AdventUtilities/1.0.0": {
+        "runtime": {
+          "AdventUtilities.dll": {}
         }
       }
     }
   },
   "libraries": {
     "Day21/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AdventUtilities/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

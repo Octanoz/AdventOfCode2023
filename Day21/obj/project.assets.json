@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    "net8.0": {}
+    "net8.0": {
+      "AdventUtilities/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/AdventUtilities.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/AdventUtilities.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "AdventUtilities/1.0.0": {
+      "type": "project",
+      "path": "../AdventUtilities/AdventUtilities.csproj",
+      "msbuildProject": "../AdventUtilities/AdventUtilities.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net8.0": []
+    "net8.0": [
+      "AdventUtilities >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\rheye\\.nuget\\packages\\": {},
@@ -38,7 +57,11 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\rheye\\OneDrive\\Documents\\AdventOfCode\\2023\\AdventUtilities\\AdventUtilities.csproj": {
+              "projectPath": "C:\\Users\\rheye\\OneDrive\\Documents\\AdventOfCode\\2023\\AdventUtilities\\AdventUtilities.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

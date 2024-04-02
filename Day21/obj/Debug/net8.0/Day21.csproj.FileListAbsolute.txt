@@ -13,3 +13,7 @@ C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day21\obj\Debug\net8.0\refin
 C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day21\obj\Debug\net8.0\Day21.pdb
 C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day21\obj\Debug\net8.0\Day21.genruntimeconfig.cache
 C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day21\obj\Debug\net8.0\ref\Day21.dll
+C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day21\bin\Debug\net8.0\AdventUtilities.dll
+C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day21\bin\Debug\net8.0\AdventUtilities.pdb
+C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day21\obj\Debug\net8.0\Day21.csproj.AssemblyReference.cache
+C:\Users\rheye\OneDrive\Documents\AdventOfCode\2023\Day21\obj\Debug\net8.0\Day21.csproj.Up2Date

@@ -130,7 +130,7 @@ public static class GridExtensions
                                                                                     .ToArray())
                                                                                 .ToArray();
 
-    public static void Draw2DGrid<T>(T[,] grid)
+    public static void Draw2DGrid<T>(this T[,] grid)
     {
         int rows = grid.GetLength(0);
         int cols = grid.GetLength(1);
@@ -145,7 +145,7 @@ public static class GridExtensions
         }
     }
 
-    public static void Draw2DGridTight<T>(T[,] grid)
+    public static void Draw2DGridTight<T>(this T[,] grid)
     {
         int rows = grid.GetLength(0);
         int cols = grid.GetLength(1);
@@ -160,7 +160,7 @@ public static class GridExtensions
         }
     }
 
-    public static void DrawJaggedGrid<T>(T[][] grid)
+    public static void DrawJaggedGrid<T>(this T[][] grid)
     {
         int rows = grid.Length;
         int cols = grid[0].Length;
@@ -175,7 +175,7 @@ public static class GridExtensions
         }
     }
 
-    public static void DrawJaggedGridTight<T>(T[][] grid)
+    public static void DrawJaggedGridTight<T>(this T[][] grid)
     {
         int rows = grid.Length;
         int cols = grid[0].Length;
