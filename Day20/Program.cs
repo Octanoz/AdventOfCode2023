@@ -1,4 +1,4 @@
-﻿#define PART1
+﻿// #define PART1
 // #define TEST1
 #define PART2
 // #define TEST2
@@ -20,13 +20,11 @@ Debug.Assert(result1 == 32000000, $"Result for example1 was {result1} instead of
 
 long result2 = PartOne(filePaths["example2"]);
 Debug.Assert(result2 == 11687500, $"Result for example2 was {result2} instead of 11687500");
-#endif
 
-#if PART1
+#elif PART1
 Console.WriteLine($"Multiplication of low and high pulse counts in part one: {PartOne(filePaths["challenge"])}");
-#endif
 
-#if PART2
+#elif PART2
 Console.WriteLine($"Button presses before single low pulse sent to 'rx': {PartTwo(filePaths["challenge"])}");
 #endif
 
@@ -125,8 +123,8 @@ long PartTwo(string filePath)
     CommModule? startingModule = commModules.First(cm => cm.Name is "broadcaster") ??
                                     throw new InvalidDataException($"Was not able to find the starting module named 'broadcaster'");
 
-    //The low pulse for rx needs to come from conjunction module gf in this puzzle input
-    Pulse[] gfHistory = Enumerable.Repeat(Pulse.Low, 4).ToArray();
+    //The low pulse for rx needs to come from a conjunction module 
+    Pulse[] conHistory = Enumerable.Repeat(Pulse.Low, 4).ToArray();
     long[] highPulseLoops = new long[4];
     var (historyHighCount, index, loop) = (0, 0, 0);
 
@@ -142,30 +140,31 @@ long PartTwo(string filePath)
             {
                 if (targetName is "rx")
                 {
-                    Conjunction gfCon = commModules.Find(cm => cm.Name == sourceName) as Conjunction ??
+                    Conjunction originCon = commModules.Find(cm => cm.Name == sourceName) as Conjunction ??
                                         throw new InvalidDataException("Could not cast 'rx' module as Conjunction");
 
-                    //Copy any new high pulse inputs
-                    if (gfCon.InputMemory.Values.Count(p => p == Pulse.High) is not 0)
+                    //Copy any new high pulse inputs checking against the memory of the conjunction module
+                    //(hardcoding dictionary keys == cheating?)
+                    if (originCon.InputMemory.Values.Count(p => p == Pulse.High) is not 0)
                     {
-                        gfHistory[0] = gfHistory[0] == Pulse.Low ? gfCon.InputMemory["kr"] : gfHistory[0];
-                        gfHistory[1] = gfHistory[1] == Pulse.Low ? gfCon.InputMemory["zs"] : gfHistory[1];
-                        gfHistory[2] = gfHistory[2] == Pulse.Low ? gfCon.InputMemory["kf"] : gfHistory[2];
-                        gfHistory[3] = gfHistory[3] == Pulse.Low ? gfCon.InputMemory["qk"] : gfHistory[3];
+                        conHistory[0] = conHistory[0] == Pulse.Low ? originCon.InputMemory["kr"] : conHistory[0];
+                        conHistory[1] = conHistory[1] == Pulse.Low ? originCon.InputMemory["zs"] : conHistory[1];
+                        conHistory[2] = conHistory[2] == Pulse.Low ? originCon.InputMemory["kf"] : conHistory[2];
+                        conHistory[3] = conHistory[3] == Pulse.Low ? originCon.InputMemory["qk"] : conHistory[3];
                     }
 
-                    if (gfHistory.Count(p => p == Pulse.High) > historyHighCount)
+                    if (conHistory.Count(p => p == Pulse.High) > historyHighCount)
                     {
-                        historyHighCount = gfHistory.Count(p => p == Pulse.High);
+                        historyHighCount = conHistory.Count(p => p == Pulse.High);
                         highPulseLoops[index++] = loop;
 
 #if TEST2
                         Console.WriteLine($"\nIn loop {loop} the history array was able to add another high pulse\n");
-                        Console.WriteLine($"Actual module memory: \n{gfCon}\n\nHistory: \n{string.Join(" | ", gfHistory)}\n============");
+                        Console.WriteLine($"Actual module memory: \n{originCon}\n\nHistory: \n{string.Join(" | ", conHistory)}\n============");
 #endif
                     }
 
-                    if (Array.TrueForAll(gfHistory, p => p == Pulse.High))
+                    if (Array.TrueForAll(conHistory, p => p == Pulse.High))
                     {
                         long lcm = highPulseLoops.Aggregate((a, b) => a * b / GCD(a, b));
                         return lcm;

@@ -1,6 +1,11 @@
-﻿// string filePath = @"..\Day6\example1.txt";
-string filePath = @"..\Day6\input.txt";
-string[] input = File.ReadAllLines(filePath);
+﻿
+Dictionary<string, string> filePaths = new()
+{
+    ["example1"] = @"..\Day6\example1.txt",
+    ["challenge"] = @"..\Day6\input.txt"
+};
+
+string[] input = File.ReadAllLines(filePaths["challenge"]);
 
 int resultOne = PartOne(input);
 Console.WriteLine($"The product of all win scenarios in part one is: {resultOne}");

@@ -1,18 +1,20 @@
 ﻿using System.Text.RegularExpressions;
 
-// string filePath = @"..\Day8\example1.txt";
-// string filePath = @"..\Day8\example2.txt";
-// string filePath = @"..\Day8\example3.txt";
-string filePath = @"..\Day8\input.txt";
-ReadOnlySpan<string> input = File.ReadAllLines(filePath);
+Dictionary<string, string> filePaths = new()
+{
+    ["example1"] = @"..\Day8\example1.txt",
+    ["example2"] = @"..\Day8\example2.txt",
+    ["example3"] = @"..\Day8\example3.txt",
+    ["challenge"] = @"..\Day8\input.txt"
+};
 
-// int resultOne = PartOne(input);
-// Console.WriteLine($"It took {resultOne} steps to get to 'ZZZ' in part one.");
+ReadOnlySpan<string> input = File.ReadAllLines(filePaths["challenge"]);
+
+int resultOne = PartOne(input);
+Console.WriteLine($"It took {resultOne} steps to get to 'ZZZ' in part one.");
 
 ulong resultTwo = PartTwo(input, []);
 Console.WriteLine($"It took {resultTwo} steps to travel from all 'xxA' nodes to all 'xxZ' nodes in part two.");
-
-//? 105537351152520 was too high
 
 int PartOne(ReadOnlySpan<string> input)
 {

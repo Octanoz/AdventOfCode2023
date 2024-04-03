@@ -76,7 +76,6 @@ long PartTwo(ReadOnlySpan<string> grid)
 
                     numberMatch = numberMatch.NextMatch();
                 }
-
             }
 
             numberMatch = Regex.Match(grid[i], numberPattern);

@@ -76,6 +76,8 @@ In the above example, the first pattern's vertical line has 5 columns to its lef
 
 Find the line of reflection in each of the patterns in your notes. What number do you get after summarizing all of your notes?
 
+<br>
+
 # Part Two
 
 You resume walking through the valley of mirrors and - SMACK! - run directly into one. Hopefully nobody was watching, because that must have been pretty embarrassing.

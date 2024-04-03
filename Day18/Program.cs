@@ -96,7 +96,7 @@ int PartOne(Span<string> input)
     Console.WriteLine();
 #endif
 
-    Coord minRow = coordinates.OrderBy(c => c.Row).First(); //Find the first coordinate at the top of the grid that is not empty
+    Coord minRow = coordinates.OrderBy(c => c.Row).First(); //Find the first coordinate at the top of the grid which is not empty
     Coord fillStart = LagoonMethods.FindFillerStart(grid, minRow); //Navigate to the first empty space inside the lagoon
     LagoonMethods.FillGrid(grid, fillStart, rows, cols);
 

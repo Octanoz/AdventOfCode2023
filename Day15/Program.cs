@@ -1,6 +1,11 @@
-﻿// string filePath = @"..\Day15\example1.txt";
-string filePath = @"..\Day15\input.txt";
-string[] input = File.ReadAllText(filePath)
+﻿
+Dictionary<string, string> filePaths = new()
+{
+    ["example1"] = @"..\Day15\example1.txt",
+    ["challenge"] = @"..\Day15\input.txt"
+};
+
+string[] input = File.ReadAllText(filePaths["challenge"])
                         .Split(new[] { ',', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
 Console.WriteLine($"The sum of the results in part one is {PartOne(input)}");
@@ -26,7 +31,7 @@ int PartTwo(string[] input)
         int boxNumber = labelString.Select(c => c).Aggregate(0, (acc, ascii) => (acc + ascii) * 17 % 256);
 
         int index = boxes[boxNumber].IndexOf(boxes[boxNumber].Find(item => item.label == labelString));
-        char operation = input[i][^2] == '=' ? '=' : '-';
+        char operation = input[i][^2] is '=' ? '=' : '-';
 
         if (operation is '=')
         {

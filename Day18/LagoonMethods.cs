@@ -160,6 +160,7 @@ public static class LagoonMethods
                 throw new ArgumentException($"Invalid direction used in CalculateRange [{direction}]");
         }
 
+        //Sort output to simplify left to right, row by row calculations later on
         if (startCoord.Row < endCoord.Row || startCoord.Col < endCoord.Col)
             return (startCoord, endCoord);
         else return (endCoord, startCoord);

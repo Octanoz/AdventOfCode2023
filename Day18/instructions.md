@@ -67,6 +67,8 @@ Now, the lagoon can contain a much more respectable `62` cubic meters of lava. W
 
 The Elves are concerned the lagoon won't be large enough; if they follow their dig plan, how many cubic meters of lava could it hold?
 
+<br>
+
 # Part Two
 
 The Elves were right to be concerned; the planned lagoon would be much too small.

@@ -1,11 +1,19 @@
 ﻿using Day10;
 
-// string filePath = @"..\Day10\example1.txt";
-// string filePath = @"..\Day10\example2.txt";
-// string filePath = @"..\Day10\example3.txt";
-// string filePath = @"..\Day10\example4.txt";
-string filePath = @"..\Day10\input.txt";
-ReadOnlySpan<string> input = File.ReadAllLines(filePath);
+///May refactor this using the CustomCoord class that I didn't have implemented at the time
+///That will likely make this a lot cleaner but also require the whole thing to be re-written nearly from scratch
+///There are a lot of possible moves and out of bounds calculations that can probably be avoided
+
+Dictionary<string, string> filePaths = new()
+{
+    ["example1"] = @"..\Day10\example1.txt",
+    ["example2"] = @"..\Day10\example2.txt",
+    ["example3"] = @"..\Day10\example3.txt",
+    ["example4"] = @"..\Day10\example4.txt",
+    ["challenge"] = @"..\Day10\input.txt"
+};
+
+ReadOnlySpan<string> input = File.ReadAllLines(filePaths["challenge"]);
 
 string[,] pipeGrid1 = GridMethods.PopulateStringGrid(input);
 string[,] pipeGrid2 = GridMethods.PopulateOriginalGrid(input);
@@ -81,11 +89,6 @@ int PartOne(string[,] pipeGrid, SPipe sPipe, List<Pipe> pipes)
                     pipeNodes.Enqueue((rowA, colA));
             }
         }
-        else if (!isValidA)
-        {
-            prevValue = int.Parse(pipeGrid[rowB, colB]);
-            pipeGrid[cRow, cCol] = (prevValue + 1).ToString();
-        }
         else
         {
             prevValue = int.Parse(pipeGrid[rowB, colB]);
@@ -149,17 +152,13 @@ int PartTwo(string[,] pipeGrid, SPipe sPipe, List<Pipe> pipes)
     {
         for (int col = 1; col < gridCols - 1; col++)
         {
-            if (!symbols.Contains(pipeGrid[row, col]))
+            if (!symbols.Contains(pipeGrid[row, col]) && GridMethods.InsideLoop(pipeGrid, row, col))
             {
-                if (GridMethods.InsideLoop(pipeGrid, row, col))
-                {
-                    pipeGrid[row, col] = "X";
-                    insideLoop++;
-                }
+                pipeGrid[row, col] = "X";
+                insideLoop++;
             }
         }
     }
-    // GridMethods.DrawStringGrid(pipeGrid);
 
     return insideLoop;
 }
@@ -170,28 +169,23 @@ Queue<(int, int)> StartingNodes(SPipe sPipe, string[,] pipeGrid, (int row, int c
     int maxCol = pipeGrid.GetLength(1);
     Queue<(int, int)> pipeNodes = [];
 
-    if (possibleMoves[0].row >= 0 && possibleMoves[0].row < maxRow && possibleMoves[0].col >= 0 && possibleMoves[0].col < maxCol)
+    for (int i = 0; i < possibleMoves.Length; i++)
     {
-        if (sPipe.MoveLeft.Contains(pipeGrid[possibleMoves[0].row, possibleMoves[0].col]))
-            pipeNodes.Enqueue((possibleMoves[0].row, possibleMoves[0].col));
-    }
+        if (possibleMoves[i].row < 0 && possibleMoves[i].row >= maxRow &&
+            possibleMoves[i].col < 0 && possibleMoves[i].col >= maxCol)
+        {
+            continue;
+        }
 
-    if (possibleMoves[1].row >= 0 && possibleMoves[1].row < maxRow && possibleMoves[1].col >= 0 && possibleMoves[1].col < maxCol)
-    {
-        if (sPipe.MoveUp.Contains(pipeGrid[possibleMoves[1].row, possibleMoves[1].col]))
-            pipeNodes.Enqueue((possibleMoves[1].row, possibleMoves[1].col));
-    }
-
-    if (possibleMoves[2].row >= 0 && possibleMoves[2].row < maxRow && possibleMoves[2].col >= 0 && possibleMoves[2].col < maxCol)
-    {
-        if (sPipe.MoveRight.Contains(pipeGrid[possibleMoves[2].row, possibleMoves[2].col]))
-            pipeNodes.Enqueue((possibleMoves[2].row, possibleMoves[2].col));
-    }
-
-    if (possibleMoves[3].row >= 0 && possibleMoves[3].row < maxRow && possibleMoves[3].col >= 0 && possibleMoves[3].col < maxCol)
-    {
-        if (sPipe.MoveDown.Contains(pipeGrid[possibleMoves[3].row, possibleMoves[3].col]))
-            pipeNodes.Enqueue((possibleMoves[3].row, possibleMoves[3].col));
+        switch (i)
+        {
+            case 0 when sPipe.MoveLeft.Contains(pipeGrid[possibleMoves[i].row, possibleMoves[i].col]):
+            case 1 when sPipe.MoveUp.Contains(pipeGrid[possibleMoves[i].row, possibleMoves[i].col]):
+            case 2 when sPipe.MoveRight.Contains(pipeGrid[possibleMoves[i].row, possibleMoves[i].col]):
+            case 3 when sPipe.MoveDown.Contains(pipeGrid[possibleMoves[i].row, possibleMoves[i].col]):
+                pipeNodes.Enqueue((possibleMoves[i].row, possibleMoves[i].col));
+                break;
+        }
     }
 
     return pipeNodes;

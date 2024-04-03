@@ -1,16 +1,16 @@
 ﻿using Day5;
 
-// string filePath = @"..\Day5\example1.txt";
-string filePath = @"..\Day5\input.txt";
-// ReadOnlySpan<string> input = File.ReadAllLines(filePath);
+Dictionary<string, string> filePaths = new()
+{
+    ["example1"] = @"..\Day5\example1.txt",
+    ["challenge"] = @"..\Day5\input.txt"
+};
 
-long locationOne = PartOne(filePath);
+long locationOne = PartOne(filePaths["challenge"]);
 Console.WriteLine($"Lowest location number in part one is: {locationOne}");
 
-long locationTwo = PartTwo(filePath);
+long locationTwo = PartTwo(filePaths["challenge"]);
 Console.WriteLine($"Lowest location number in part two is: {locationTwo}");
-
-//? 100165128 was too low
 
 long PartOne(string filePath)
 {

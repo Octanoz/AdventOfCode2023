@@ -1,10 +1,14 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
 
-// string filePath = @"..\Day12\example1.txt";
-// string filePath = @"..\Day12\example2.txt";
-string filePath = @"..\Day12\input.txt";
-string[] input = File.ReadAllLines(filePath);
+Dictionary<string, string> filePaths = new()
+{
+    ["example1"] = @"..\Day12\example1.txt",
+    ["example2"] = @"..\Day12\example2.txt",
+    ["challenge"] = @"..\Day12\input.txt"
+};
+
+string[] input = File.ReadAllLines(filePaths["challenge"]);
 
 int resultOne = PartOne(input);
 Console.WriteLine($"Result for part one: {resultOne}");
@@ -12,15 +16,13 @@ Console.WriteLine($"Result for part one: {resultOne}");
 long resultTwo = partTwo(input);
 Console.WriteLine($"Result for part two: {resultTwo}");
 
-//? 22669807808 was too low
-
-// Takes a few seconds to process but obviously too slow for five times the pattern size with 5 extra ?'s
+// Takes a few seconds to process on part 1 so obviously too slow for five times the pattern size with 5 extra ?'s
 int PartOne(string[] input)
 {
     int result = 0;
     foreach (var line in input)
     {
-        string[] parts = line.Split(' ');
+        string[] parts = line.Split();
         string pattern = parts[0];
         int[] groups = parts[1].Split(',').Select(int.Parse).ToArray();
         string expression = CreateExpression(groups);
@@ -36,14 +38,14 @@ long partTwo(string[] input)
     long result = 0;
     foreach (var line in input)
     {
-        string[] parts = line.Split(' ');
+        string[] parts = line.Split();
 
         string pattern = "";
         for (int i = 0; i < 5; i++)
         {
             pattern += parts[0];
 
-            if (i != 4)
+            if (i is not 4)
                 pattern += '?';
         }
 
@@ -52,14 +54,12 @@ long partTwo(string[] input)
         {
             quintString += parts[1];
 
-            if (i != 4)
+            if (i is not 4)
                 quintString += ',';
         }
+
         int[] groups = quintString.Split(',').Select(int.Parse).ToArray();
         result += PossibleIterations(pattern, groups);
-        // long matches = PossibleIterations(pattern, groups);
-        // Console.WriteLine($"{matches} matches found for pattern {pattern} using the layout {quintString}");
-        // result += matches;
     }
 
     return result;
@@ -88,11 +88,11 @@ string CreateExpression(int[] groups)
 
 string[] GeneratePermutations(string pattern)
 {
-    int questionMarks = pattern.Select(c => c).Where(c => c == '?').Count();
+    int questionMarks = pattern.Select(c => c).Count(c => c == '?');
 
     var permutations = Enumerable.Range(0, 1 << questionMarks)
                                                         .Select(i => new string(Enumerable.Range(0, questionMarks)
-                                                        .Select(j => (i & (1 << j)) == 0 ? '.' : '#')
+                                                            .Select(j => (i & (1 << j)) == 0 ? '.' : '#')
                                                         .ToArray()));
 
     return permutations.ToArray();
@@ -126,7 +126,7 @@ int MatchesFound(string pattern, string expression, string[] permutations)
 
 long PossibleIterations(string pattern, int[] groups)
 {
-    var permutations = new long[pattern.Length + 1, groups.Length + 1];
+    long[,] permutations = new long[pattern.Length + 1, groups.Length + 1];
     permutations[0, 0] = 1;
 
     for (int patternLength = 1; patternLength <= pattern.Length; patternLength++)
@@ -164,7 +164,7 @@ long PossibleIterations(string pattern, int[] groups)
             }
 
             // There needs to be a separator between groups, anything that's not #
-            if (patternIndex - groupSize >= 0 && pattern[patternIndex - groupSize] == '#')
+            if (patternIndex - groupSize >= 0 && pattern[patternIndex - groupSize] is '#')
             {
                 canPlaceGroup = false;
             }

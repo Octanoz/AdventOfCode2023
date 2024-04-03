@@ -1,7 +1,11 @@
 ﻿
-// string filePath = @"..\Day7\example1.txt";
-string filePath = @"..\Day7\input.txt";
-ReadOnlySpan<string> input = File.ReadAllLines(filePath);
+Dictionary<string, string> filePaths = new()
+{
+    ["example1"] = @"..\Day7\example1.txt",
+    ["challenge"] = @"..\Day7\input.txt"
+};
+
+ReadOnlySpan<string> input = File.ReadAllLines(filePaths["challenge"]);
 
 Dictionary<char, int> cardStrengths = new()
 {
@@ -215,7 +219,7 @@ bool IsFourOfAKind(string s)
                 sameLabel++;
         }
 
-        if (sameLabel == 4)
+        if (sameLabel is 4)
             return true;
     }
 
@@ -233,7 +237,7 @@ bool IsThreeOfAKind(string s)
                 sameLabel++;
         }
 
-        if (sameLabel == 3)
+        if (sameLabel is 3)
             return true;
     }
 
@@ -246,7 +250,7 @@ int sameCards(string s)
     int maxSame = 0;
     for (int i = 0; i < s.Length - 1; i++)
     {
-        if (s[i] == 'J')
+        if (s[i] is 'J')
             continue;
 
         int sameLabel = 1;
@@ -264,12 +268,12 @@ int sameCards(string s)
 
 bool IsFullHouseWithJoker(string s)
 {
-    return s.Distinct().Count() == 2 || s.Distinct().Count() == 3 && s.Contains('J');
+    return s.Distinct().Count() is 2 || s.Distinct().Count() is 3 && s.Contains('J');
 }
 
 bool IsOnePairWithJoker(string s)
 {
-    return s.Distinct().Count() == 4 || s.Distinct().Count() == 5 && s.Contains('J');
+    return s.Distinct().Count() is 4 || s.Distinct().Count() is 5 && s.Contains('J');
 }
 
 

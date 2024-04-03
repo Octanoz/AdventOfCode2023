@@ -85,7 +85,7 @@ Unfortunately, the reindeer has stolen the page containing the expected verifica
 Run the HASH algorithm on each step in the initialization sequence. <br>
 What is the sum of the results? (The initialization sequence is one long line; be careful when copy-pasting it.)
 
-<br><br>
+<br>
 
 # Part Two
 

@@ -1,9 +1,12 @@
 ﻿using Day16;
 
-// string filePath = @"..\Day16\example1.txt";
-string filePath = @"..\Day16\input.txt";
+Dictionary<string, string> filePaths = new()
+{
+    ["example1"] = @"..\Day16\example1.txt",
+    ["challenge"] = @"..\Day16\input.txt"
+};
 
-char[][] input = File.ReadAllLines(filePath).Select(s => s.ToCharArray()).ToArray();
+char[][] input = File.ReadAllLines(filePaths["challenge"]).Select(s => s.ToCharArray()).ToArray();
 int rows = input.Length;
 int cols = input[0].Length;
 
@@ -181,26 +184,28 @@ Point Move(Point current)
 
 List<Point> BeamSplits(char c, Point current)
 {
+    int currentDirection = (int)current.Direction;
+
     return c switch
     {
         '|' => current.Direction switch
         {
-            Direction.Left => [new(current.Row - 1, current.Column,  (Direction)(((int)current.Direction + 1) % 4)),
-                                new(current.Row + 1, current.Column, (Direction)(((int)current.Direction - 1 + 4) % 4))],
+            Direction.Left => [new(current.Row - 1, current.Column,  (Direction)((currentDirection + 1) % 4)),
+                                new(current.Row + 1, current.Column, (Direction)((currentDirection - 1 + 4) % 4))],
 
-            Direction.Right => [new(current.Row - 1, current.Column, (Direction)(((int)current.Direction - 1 + 4) % 4)),
-                                new(current.Row + 1, current.Column, (Direction)(((int)current.Direction + 1) % 4))],
+            Direction.Right => [new(current.Row - 1, current.Column, (Direction)((currentDirection - 1 + 4) % 4)),
+                                new(current.Row + 1, current.Column, (Direction)((currentDirection + 1) % 4))],
 
             _ => throw new ArgumentException($"Invalid direction found: [{current.Direction}] Point: [{current.Row},{current.Column}]")
         },
 
         '-' => current.Direction switch
         {
-            Direction.Up => [new(current.Row, current.Column + 1, (Direction)(((int)current.Direction + 1) % 4)),
-                            new(current.Row, current.Column - 1, (Direction)(((int)current.Direction - 1 + 4) % 4))],
+            Direction.Up => [new(current.Row, current.Column + 1, (Direction)((currentDirection + 1) % 4)),
+                            new(current.Row, current.Column - 1, (Direction)((currentDirection - 1 + 4) % 4))],
 
-            Direction.Down => [new(current.Row, current.Column + 1, (Direction)(((int)current.Direction - 1 + 4) % 4)),
-                                new(current.Row, current.Column - 1, (Direction)(((int)current.Direction + 1) % 4))],
+            Direction.Down => [new(current.Row, current.Column + 1, (Direction)((currentDirection - 1 + 4) % 4)),
+                                new(current.Row, current.Column - 1, (Direction)((currentDirection + 1) % 4))],
 
             _ => throw new ArgumentException($"Invalid direction found: [{current.Direction}] Point: [{current.Row},{current.Column}]")
         },
@@ -211,23 +216,25 @@ List<Point> BeamSplits(char c, Point current)
 
 Point MirrorReflect(char c, Point current)
 {
+    int currentDirection = (int)current.Direction;
+
     return c switch
     {
         '/' => current.Direction switch
         {
-            Direction.Left => new(current.Row + 1, current.Column, (Direction)(((int)current.Direction - 1 + 4) % 4)),
-            Direction.Right => new(current.Row - 1, current.Column, (Direction)(((int)current.Direction - 1 + 4) % 4)),
-            Direction.Up => new(current.Row, current.Column + 1, (Direction)(((int)current.Direction + 1) % 4)),
-            Direction.Down => new(current.Row, current.Column - 1, (Direction)(((int)current.Direction + 1) % 4)),
+            Direction.Left => new(current.Row + 1, current.Column, (Direction)((currentDirection - 1 + 4) % 4)),
+            Direction.Right => new(current.Row - 1, current.Column, (Direction)((currentDirection - 1 + 4) % 4)),
+            Direction.Up => new(current.Row, current.Column + 1, (Direction)((currentDirection + 1) % 4)),
+            Direction.Down => new(current.Row, current.Column - 1, (Direction)((currentDirection + 1) % 4)),
             _ => throw new ArgumentException($"Invalid direction found: [{current.Direction}] Point: [{current.Row},{current.Column}]")
         },
 
         '\\' => current.Direction switch
         {
-            Direction.Left => new(current.Row - 1, current.Column, (Direction)(((int)current.Direction + 1) % 4)),
-            Direction.Right => new(current.Row + 1, current.Column, (Direction)(((int)current.Direction + 1) % 4)),
-            Direction.Up => new(current.Row, current.Column - 1, (Direction)(((int)current.Direction - 1 + 4) % 4)),
-            Direction.Down => new(current.Row, current.Column + 1, (Direction)(((int)current.Direction - 1 + 4) % 4)),
+            Direction.Left => new(current.Row - 1, current.Column, (Direction)((currentDirection + 1) % 4)),
+            Direction.Right => new(current.Row + 1, current.Column, (Direction)((currentDirection + 1) % 4)),
+            Direction.Up => new(current.Row, current.Column - 1, (Direction)((currentDirection - 1 + 4) % 4)),
+            Direction.Down => new(current.Row, current.Column + 1, (Direction)((currentDirection - 1 + 4) % 4)),
             _ => throw new ArgumentException($"Invalid direction found: [{current.Direction}] Point: [{current.Row},{current.Column}]")
         },
 

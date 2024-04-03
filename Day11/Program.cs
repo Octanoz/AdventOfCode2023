@@ -1,6 +1,11 @@
-﻿// string filePath = @"..\Day11\example1.txt";
-string filePath = @"..\Day11\input.txt";
-ReadOnlySpan<string> input = File.ReadAllLines(filePath);
+﻿
+Dictionary<string, string> filePaths = new()
+{
+    ["example1"] = @"..\Day11\example1.txt",
+    ["challenge"] = @"..\Day11\input.txt"
+};
+
+ReadOnlySpan<string> input = File.ReadAllLines(filePaths["challenge"]);
 
 int resultOne = PartOne(input);
 Console.WriteLine($"The sum of all distances in part one is: {resultOne}.");
@@ -45,7 +50,7 @@ long PartTwo(ReadOnlySpan<string> input)
     int maxRow = input.Length;
     int maxCol = input[0].Length;
 
-    int additionFactor = 999_999;
+    const int additionFactor = 999_999;
     int[] extraRows = ExpandedUniverseRows(input);
     int[] extraCols = ExpandedUniverseCols(input);
 
@@ -57,8 +62,8 @@ long PartTwo(ReadOnlySpan<string> input)
         {
             if (input[row][col] == '#')
             {
-                int totalRows = (extraRows.Where(r => r < row).Count() * additionFactor) + row;
-                int totalCols = (extraCols.Where(r => r < col).Count() * additionFactor) + col;
+                int totalRows = (extraRows.Count(r => r < row) * additionFactor) + row;
+                int totalCols = (extraCols.Count(r => r < col) * additionFactor) + col;
 
                 galaxies.Add(++galaxyNumber, (totalRows, totalCols));
             }
@@ -107,7 +112,7 @@ List<List<char>> ExpandUniverse(ReadOnlySpan<string> input)
                 foundGalaxies++;
         }
 
-        if (foundGalaxies == 0)
+        if (foundGalaxies is 0)
         {
             foreach (var list in universeLines)
                 list.Insert(col, '.');
@@ -122,7 +127,6 @@ List<List<char>> ExpandUniverse(ReadOnlySpan<string> input)
 int[] ExpandedUniverseRows(ReadOnlySpan<string> input)
 {
     int maxRow = input.Length;
-    int maxCol = input[0].Length;
     List<int> emptyRows = [];
 
     for (int row = 0; row < maxRow; row++)

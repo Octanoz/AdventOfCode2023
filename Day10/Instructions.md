@@ -134,6 +134,8 @@ Here are the distances for each tile on that loop:
 Find the single giant loop starting at `S`. <br>
 How many steps along the loop does it take to get from the starting position to the point farthest from the starting position?
 
+<br>
+
 # Part Two
 
 You quickly reach the farthest point of the loop, but the animal never emerges. Maybe its nest is within the area enclosed by the loop?

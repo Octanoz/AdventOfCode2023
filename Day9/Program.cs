@@ -1,6 +1,10 @@
-﻿// string filePath = @"..\Day9\example1.txt";
-string filePath = @"..\Day9\input.txt";
-ReadOnlySpan<string> input = File.ReadAllLines(filePath);
+﻿Dictionary<string, string> filePaths = new()
+{
+    ["example1"] = @"..\Day9\example1.txt",
+    ["challenge"] = @"..\Day9\input.txt"
+};
+
+ReadOnlySpan<string> input = File.ReadAllLines(filePaths["challenge"]);
 
 int resultOne = PartOne(input);
 Console.WriteLine($"Total histories in part one: {resultOne}");

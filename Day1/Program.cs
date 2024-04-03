@@ -38,6 +38,7 @@ int PartTwo(ReadOnlySpan<string> input)
         ["nine"] = 9
     };
 
+    //Also add the digits to the dictionary written as strings "1", "2", etc.
     for (int i = 1; i < 10; i++)
     {
         digits.Add(i.ToString(), i);

@@ -25,8 +25,10 @@ int PartOne(string filePath)
     List<Gear> acceptedGears = [];
 
     using StreamReader sr = new(filePath);
-    string currentString = sr.ReadLine() ?? throw new InvalidDataException("Unable to read the input file.");
+    string currentString = sr.ReadLine() ??
+                            throw new InvalidDataException("Unable to read the input file.");
 
+    //Until the empty line all data is related to workflows
     while (!String.IsNullOrEmpty(currentString))
     {
         //Workflows line format: px{a<2006:qkq,m>2090:A,rfg}
@@ -42,9 +44,11 @@ int PartOne(string filePath)
                         throw new InvalidDataException($"Unexpected end of file after {storedWorkflows.Count} workflows: processing {storedWorkflows.Keys.Last()}");
     }
 
+    //After empty line until the end all data is related to gears
     while (!sr.EndOfStream)
     {
-        currentString = sr.ReadLine() ?? throw new InvalidDataException($"Unexpected early exit in second while loop after processing {acceptedGears.Count} gears. Last accepted gear: [{acceptedGears[^1]}]");
+        currentString = sr.ReadLine() ??
+                        throw new InvalidDataException($"Unexpected early exit in second while loop after processing {acceptedGears.Count} gears. Last accepted gear: [{acceptedGears[^1]}]");
 
         //Gear line format: {x=787,m=2655,a=1222,s=2876}
         int[] gearAttributes = currentString[2..^1].Split(new[] { '=', ',' }, StringSplitOptions.RemoveEmptyEntries)
@@ -77,7 +81,8 @@ long PartTwo(string filePath)
     long result = 0;
 
     using StreamReader sr = new(filePath);
-    string currentString = sr.ReadLine() ?? throw new InvalidDataException("Unable to read the input file.");
+    string currentString = sr.ReadLine() ??
+                            throw new InvalidDataException("Unable to read the input file.");
 
     while (!String.IsNullOrEmpty(currentString))
     {

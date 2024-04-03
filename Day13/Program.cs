@@ -1,18 +1,21 @@
 ﻿
-// string filePath = @"..\Day13\example1.txt";
-string filePath = @"..\Day13\input.txt";
+Dictionary<string, string> filePaths = new()
+{
+    ["example1"] = @"..\Day13\example1.txt",
+    ["challenge"] = @"..\Day13\input.txt"
+};
 
-int resultOne = PartOne(filePath);
+int resultOne = PartOne(filePaths["challenge"]);
 Console.WriteLine($"Adding the total lines left of the vertical reflections and 100x the total lines above the horizontal reflections gave: {resultOne}");
 
-int resultTwo = PartTwo(filePath);
+int resultTwo = PartTwo(filePaths["challenge"]);
 Console.WriteLine($"After fixing the smudge calculating the total reflections gave: {resultTwo}");
 
 int PartOne(string filePath)
 {
     int totalReflections = 0;
     using StreamReader sr = new(filePath);
-    string currentLine = "";
+    string currentLine;
     while (!sr.EndOfStream)
     {
         currentLine = sr.ReadLine()!;
@@ -47,7 +50,7 @@ int PartTwo(string filePath)
 {
     int totalReflections = 0;
     using StreamReader sr = new(filePath);
-    string currentLine = "";
+    string currentLine;
     while (!sr.EndOfStream)
     {
         currentLine = sr.ReadLine()!;

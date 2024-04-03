@@ -1,11 +1,22 @@
-﻿using System.Text;
+﻿// #define PART2ALT
 
-// string filePath = @"..\Day14\example1.txt";
-string filePath = @"..\Day14\input.txt";
-ReadOnlySpan<string> input = File.ReadAllLines(filePath);
+using System.Text;
+
+Dictionary<string, string> filePaths = new()
+{
+    ["example1"] = @"..\Day14\example1.txt",
+    ["challenge"] = @"..\Day14\input.txt"
+};
+
+ReadOnlySpan<string> input = File.ReadAllLines(filePaths["challenge"]);
 
 Console.WriteLine($"The total load on the northern support beams is {PartOne(input)}");
 Console.WriteLine($"After 1_000_000_000 cycles the load on the north beams is {PartTwo(input)}");
+
+#if PART2ALT
+Console.WriteLine($"After 1_000_000_000 cycles the load on the north beams is {PartTwoStrings(input)}");
+#endif
+
 
 int PartOne(ReadOnlySpan<string> input)
 {
@@ -36,10 +47,14 @@ int PartTwo(ReadOnlySpan<string> input)
 
     int loopSize = currentLoop - gridHashes[gridHash];
     while (currentLoop + loopSize < loops)
+    {
         currentLoop += loopSize;
+    }
 
     while (currentLoop++ < loops)
+    {
         grid = TiltAllDirections(grid, rows, cols);
+    }
 
     return CalculateNorthLoad(grid, rows, cols);
 }
@@ -50,7 +65,9 @@ int PartTwo(ReadOnlySpan<string> input)
 /// Converts grids to strings and stores those so will use significantly more memory.
 /// With the size of the loop in this challenge the *potential* speed gain for not having to loop over the grid anymore is negligible.
 /// Using char[][] instead of char[,] would've made string conversions a little more straightforward.
-/// 
+/// </summary>
+
+#if PART2ALT
 int PartTwoStrings(ReadOnlySpan<string> input)
 {
     int rows = input.Length;
@@ -92,6 +109,7 @@ int PartTwoStrings(ReadOnlySpan<string> input)
     return CalculateNorthLoad(grid, rows, cols);
 }
 
+
 string ConvertGridToString(char[,] grid, int rows, int cols)
 {
     StringBuilder sb = new();
@@ -124,6 +142,7 @@ char[,] ConvertStringToGrid(string storedString, int rows, int cols)
     return grid;
 }
 
+#endif
 #endregion
 
 char[,] PopulateGrid(ReadOnlySpan<string> input, int rows, int cols)

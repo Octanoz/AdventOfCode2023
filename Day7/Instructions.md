@@ -88,6 +88,8 @@ So the total winnings in this example are 6440.
 
 Find the rank of every hand in your set. What are the total winnings?
 
+<br>
+
 # Part Two
 
 To make things a little more interesting, the Elf introduces one additional rule. Now, J cards are jokers - wildcards that can act like whatever card would make the hand the strongest type possible.

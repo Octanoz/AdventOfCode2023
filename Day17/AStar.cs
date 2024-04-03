@@ -88,7 +88,6 @@ public class AStarPathfinder(int[,] grid)
         openQueue.Enqueue(startNodeDown, 0);
         openQueue.Enqueue(startNodeRight, 0);
 
-        // Dictionary<(int, int), int> visitedFrequency = [];
         Dictionary<AStarNode, AStarNode> cameFrom = [];
         Dictionary<AStarNode, int> gScore = new()
         {
@@ -153,7 +152,7 @@ public class AStarPathfinder(int[,] grid)
         AStarNode startNodeDown = new(0, 0) { Direction = Direction.Down };
         AStarNode startNodeRight = new(0, 0) { Direction = Direction.Right };
         AStarNode endNode = new(rows - 1, cols - 1);
-        ConcurrentBag<(AStarNode, int)> openBag = [(startNodeDown, 0), (startNodeRight, 0)];
+        ConcurrentBag<(AStarNode bagNode, int heatLost)> openBag = [(startNodeDown, 0), (startNodeRight, 0)];
 
         ConcurrentDictionary<AStarNode, AStarNode> cameFrom = [];
         ConcurrentDictionary<AStarNode, int> gScore = new()
@@ -169,7 +168,7 @@ public class AStarPathfinder(int[,] grid)
         // while (openBag.TryTake(out (AStarNode tupleNode, int currentF) currentTuple))
         while (openBag.Count is not 0)
         {
-            List<AStarNode> crucibles = openBag.OrderBy(element => element.Item2).Select(element => element.Item1).ToList();
+            List<AStarNode> crucibles = openBag.OrderBy(element => element.heatLost).Select(element => element.bagNode).ToList();
             openBag.Clear();
 
             Parallel.ForEach(crucibles, currentNode =>
