@@ -90,7 +90,7 @@ In Day 4 the puzzle input is a list of strings representing scratchcards. Each c
 
 The approach is pretty straightforward. Split the string by `:` and `|`. Check the amount of matches in index 1 and index 2. The linq extension method Intersect is very handy here. 
 
-<br><br><br><br>
+<br><br>
 
 <details>
   <summary>
