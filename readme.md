@@ -104,5 +104,36 @@ I decided to use an array that keeps track of the copies of each card. Use a for
 
 <img src="ReadmePics/Day5_Fertilizer.jpeg" align="left" alt="Elves working in a vegetable garden" height="300" width="300"/>
 
-The difficulty gets ramped up significantly in Day 5. The puzzle input gives you a list of seeds and 7(!) conversion maps. 
+The difficulty gets ramped up significantly in Day 5. The puzzle input gives you a list of seeds and 7(!) conversion maps. So you end up matching this value with that, etc., etc. Until you finally converted the location number. 
 
+The values are also massive so you need to be working with long instead of int which I believe sabotages some of the Linq shortcuts that could have been used.
+
+The final result you need to give is the lowest location number you found. The conversion maps are given in order in the input so you can convert while reading the input with a streamreader. I created a NumberRange class to make the comparisons a bit easier to process.
+
+<br><br>
+
+<details>
+  <summary>
+    Part 2:
+  </summary><br>
+  For part 2 the difficulty is increased by changing the way the input should be read. First you would read a seed number with a start value and amount in its range. Now there is no more seed number given. Instead of 3 numbers only 2 apply which are start value and amount. This way you end up with even more ranges and you don't have to just find the lowest location but the lowest location within the ranges and then the lowest location of those. Dizzy yet? I added a SeedRange class to make the comparisons more manageable.
+</details>
+
+## Day 6: Wait For It
+
+<img src="ReadmePics/Day6_Wait_For_It.jpeg" align="left" alt="Elves racing in speedboats" height="300" width="300"/>
+
+In this exercise you are participating in speedboat races. You are given a set of times and a set of distances. Each time corresponds to the distance with the same index. The time is the total time of a race in milliseconds and the distance is that race's record distance in millimeters. 
+
+The speed of a boat in millimeters / millisecond is equivalent to how many milliseconds a charge button was held. Charge time takes place during the race. 
+
+The twist is that you're not calculating how long you should hold the button and beat the record but to find how many different times you could have held the button and still won. These values are then multiplied with each other to give you the final result. An array works well where you just multiply all elements once you have processed all races.
+
+<br><br>
+
+<details>
+  <summary>
+    Part 2:
+  </summary><br>
+  For part 2 it turns out that the spaces were not supposed to be in the input. You're actually just racing once so get rid of all the spaces and calculate once more how many different ways you could do better than the record distance in the race. So this actually makes the challenge a lot easier from a coding perspective but you'll be using long instead of int here, of course. Just run the same logic as before but instead of updating an array `winning[i]++` you'll just have a single variable `winning++`.
+</details>
